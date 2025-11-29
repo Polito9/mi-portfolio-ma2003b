@@ -1,6 +1,7 @@
 # Customer Satisfaction Case Study - TechnoServe Solutions
 
-**Authors:** - Diego Colin Reyes
+**Authors:** 
+- Diego Colin Reyes
 - Daniel Alejandro López Martínez
 - Eduardo Ramírez Almanza
 
