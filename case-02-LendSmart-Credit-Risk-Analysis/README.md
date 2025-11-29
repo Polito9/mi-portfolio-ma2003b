@@ -1,106 +1,106 @@
-# Análisis de Riesgo Crediticio - LendSmart
+# Credit Risk Analysis - LendSmart
 
-**Autores:**  
-- Diego Colin Reyes  
-- Daniel Alejandro López Martínez  
-- Eduardo Ramírez Almanza  
-
----
-
-## 1. Contexto del Negocio
-
-**Descripción del Cliente y Problema:**  
-**LendSmart** es una empresa FinTech especializada en préstamos personales y para pequeñas empresas. Actualmente, su cartera de préstamos presenta una **tasa de morosidad del 28%**, nivel que la dirección considera demasiado alto. La empresa necesita un modelo predictivo que identifique de manera precisa a los solicitantes de alto riesgo antes de aprobar los préstamos.
-
-**Importancia Estratégica:**  
-Este análisis convierte datos crediticios en un **modelo de clasificación predictivo** que permite a LendSmart:  
-- **Reducir pérdidas financieras** al minimizar la aprobación de préstamos que eventualmente entrarán en mora.  
-- **Optimizar la rentabilidad** al mantener un nivel aceptable de préstamos "buenos" rechazados (falsos positivos).  
-- **Mejorar la toma de decisiones** mediante la identificación de los factores clave que impulsan el riesgo de incumplimiento.  
-- **Incrementar la confianza de los inversionistas** mediante una gestión de riesgo más científica y basada en datos.  
+**Authors:**
+- Diego Colin Reyes
+- Daniel Alejandro López Martínez
+- Eduardo Ramírez Almanza
 
 ---
 
-## 2. Metodología
+## 1. Business Context
 
-**Métodos de Clasificación Aplicados:**  
-Se compararon dos técnicas de análisis discriminante:  
-1. **Análisis Discriminante Lineal (LDA)**: Asume que las clases comparten la misma matriz de covarianza.  
-2. **Análisis Discriminante Cuadrático (QDA)**: Permite que cada clase tenga su propia matriz de covarianza.  
+**Client Description & Problem:**
+**LendSmart** is a FinTech company specializing in personal and small business loans. Currently, its loan portfolio has a **default rate of 28%**, a level management considers excessively high. The company requires a predictive model to accurately identify high-risk applicants before loans are approved.
 
-**Justificación:**  
-- **Preparación de Datos**: Se aplicó **codificación one-hot** a variables categóricas (`education_level`, `marital_status`) y **estandarización** de características numéricas usando `StandardScaler`.  
-- **División de Datos**: Se utilizó una división 80-20 (entrenamiento-prueba) con `stratify=y` para mantener la proporción de clases.  
-- **Supuestos Estadísticos**: Se discutieron los supuestos de normalidad multivariada y homogeneidad de matrices de covarianza, hipotetizando que QDA superaría a LDA debido a las diferencias observadas en las distribuciones.  
-
-**Herramientas y Librerías:**  
-- **Python**: Lenguaje de programación principal.  
-- **Pandas & NumPy**: Manipulación y análisis de datos.  
-- **Scikit-learn**: Implementación de LDA, QDA, StandardScaler, train_test_split y métricas de evaluación.  
-- **Plotly**: Visualizaciones interactivas de resultados y análisis exploratorio.  
+**Strategic Importance:**
+This analysis transforms credit data into a **predictive classification model** that allows LendSmart to:
+- **Reduce financial losses** by minimizing the approval of loans that will eventually default.
+- **Optimize profitability** by maintaining an acceptable level of rejected "good" loans (false positives).
+- **Improve decision-making** by identifying key factors driving default risk.
+- **Increase investor confidence** through more scientific, data-driven risk management.
 
 ---
 
-## 3. Datos
+## 2. Methodology
 
-**Descripción del Conjunto de Datos:**  
-El análisis se basó en el archivo `credit_risk_data.csv`, que contiene **2,500 solicitudes de préstamo** con **18 variables** cada una.
+**Applied Classification Methods:**
+Two discriminant analysis techniques were compared:
+1.  **Linear Discriminant Analysis (LDA):** Assumes that classes share the same covariance matrix.
+2.  **Quadratic Discriminant Analysis (QDA):** Allows each class to have its own covariance matrix.
 
-**Variables Clave:**  
-El conjunto de variables incluye:  
+**Justification:**
+-   **Data Preparation:** Applied **one-hot encoding** to categorical variables (`education_level`, `marital_status`) and **standardization** to numerical features using `StandardScaler`.
+-   **Data Splitting:** An 80-20 (train-test) split was used with `stratify=y` to maintain class proportions.
+-   **Statistical Assumptions:** Multivariate normality and homogeneity of covariance matrices were discussed, hypothesizing that QDA might outperform LDA due to observed differences in distributions.
 
-- **Variables Predictoras (17 características)**:  
-  - **Financieras**: `annual_income`, `loan_amount`, `debt_to_income_ratio`, `savings_ratio`, `asset_value`.  
-  - **Crediticias**: `credit_score`, `credit_utilization`, `payment_history_score`, `open_credit_lines`.  
-  - **Laborales y Demográficas**: `employment_years`, `job_stability_score`, `age`, `education_level`, `marital_status`, `residential_stability`.  
-
-- **Variable Objetivo (1 variable)**:  
-  - `loan_status`: Indicador binario (0 = No moroso, 1 = Moroso).  
-
-**Calidad de Datos:**  
-- No se encontraron valores nulos en el conjunto de datos.  
-- Las distribuciones mostraron separabilidad clara entre morosos y no morosos.  
+**Tools & Libraries:**
+-   **Python:** Primary programming language.
+-   **Pandas & NumPy:** Data manipulation and analysis.
+-   **Scikit-learn:** Implementation of LDA, QDA, StandardScaler, train_test_split, and evaluation metrics.
+-   **Plotly:** Interactive result visualizations and exploratory analysis.
 
 ---
 
-## 4. Hallazgos Clave
+## 3. Data
 
-El análisis concluyó que ambos modelos (LDA y QDA) logran un **desempeño perfecto** en el conjunto de prueba, con **100% de precisión y AUC de 1.0000**.
+**Dataset Description:**
+The analysis was based on the `credit_risk_data.csv` file, containing **2,500 loan applications** with **18 variables** each.
 
-**Factores Críticos (Identificados mediante Coeficientes LDA):**  
-Los principales impulsores del riesgo de incumplimiento, en orden de importancia, son:  
-1. **`payment_history_score`** (Coef: -15.47): Historial de pagos sólido reduce drásticamente el riesgo.  
-2. **`job_stability_score`** (Coef: -13.05): Estabilidad laboral como factor clave de confiabilidad.  
-3. **`credit_utilization`** (Coef: +11.77): Alto uso de crédito disponible aumenta significativamente el riesgo.  
-4. **`debt_to_income_ratio`** (Coef: +4.47): Mayor endeudamiento relativo a ingresos incrementa la probabilidad de mora.  
-5. **`credit_score`** (Coef: -3.98): Puntaje crediticio alto reduce el riesgo, como es esperado.  
+**Key Variables:**
+The variable set includes:
 
-**Perfil de Alto Riesgo:**  
-- Historial de pagos bajo.  
-- Baja estabilidad laboral.  
-- Alta utilización de crédito disponible.  
-- Elevada relación deuda-ingresos.  
+-   **Predictor Variables (17 features):**
+    -   **Financial:** `annual_income`, `loan_amount`, `debt_to_income_ratio`, `savings_ratio`, `asset_value`.
+    -   **Credit:** `credit_score`, `credit_utilization`, `payment_history_score`, `open_credit_lines`.
+    -   **Employment & Demographic:** `employment_years`, `job_stability_score`, `age`, `education_level`, `marital_status`, `residential_stability`.
 
-**Selección del Modelo:**  
-Aunque ambos modelos son perfectos, se recomienda **LDA** por su **interpretabilidad**, ya que proporciona coeficientes lineales que explican claramente el impacto de cada variable en la decisión crediticia.  
+-   **Target Variable (1 variable):**
+    -   `loan_status`: Binary indicator (0 = Non-Defaulter, 1 = Defaulter).
+
+**Data Quality:**
+-   No null values were found in the dataset.
+-   Distributions showed clear separability between defaulters and non-defaulters.
 
 ---
 
-## 5. Recomendaciones de Negocio
+## 4. Key Findings
 
-**Recomendación Principal:**  
-Implementar el **modelo LDA** en el proceso de evaluación de solicitudes de préstamo de LendSmart.
+The analysis concluded that both models (LDA and QDA) achieved **perfect performance** on the test set, with **100% accuracy and an AUC of 1.0000**.
 
-**Impacto Esperado:**  
-- **Identificación del 100% de los morosos** en los datos de prueba.  
-- **Reducción drástica de pérdidas** por préstamos incobrables.  
-- **Mayor eficiencia en la asignación de capital** al aprobar solo préstamos de bajo riesgo.  
-- **Transparencia en las decisiones** gracias a la interpretabilidad del modelo.  
+**Critical Factors (Identified via LDA Coefficients):**
+The main drivers of default risk, in order of importance, are:
+1.  **`payment_history_score`** (Coef: -15.47): A strong payment history drastically reduces risk.
+2.  **`job_stability_score`** (Coef: -13.05): Job stability is a key reliability factor.
+3.  **`credit_utilization`** (Coef: +11.77): High use of available credit significantly increases risk.
+4.  **`debt_to_income_ratio`** (Coef: +4.47): Higher debt relative to income increases the probability of default.
+5.  **`credit_score`** (Coef: -3.98): A high credit score reduces risk, as expected.
 
-**Compensación Empresarial (Trade-Off):**  
-El modelo perfecto implica que no se rechazarán buenos clientes ni se aprobarán malos préstamos en los datos de prueba, lo que representa un escenario ideal sin compensaciones en este conjunto de datos.
+**High-Risk Profile:**
+-   Low payment history.
+-   Low job stability.
+-   High utilization of available credit.
+-   High debt-to-income ratio.
 
-**Próximos Pasos:**  
-- **Validación en datos en tiempo real** para confirmar el desempeño del modelo fuera del conjunto de prueba.  
-- **Desarrollo de un sistema de scoring** basado en los coeficientes de LDA para uso operativo.  
-- **Monitoreo continuo** del modelo para detectar cambios en los patrones de riesgo crediticio.
+**Model Selection:**
+Although both models are perfect, **LDA** is recommended for its **interpretability**, as it provides linear coefficients that clearly explain the impact of each variable on the credit decision.
+
+---
+
+## 5. Business Recommendations
+
+**Primary Recommendation:**
+Implement the **LDA model** in LendSmart's loan application evaluation process.
+
+**Expected Impact:**
+-   **Identification of 100% of defaulters** in the test data.
+-   **Drastic reduction in losses** from bad debt.
+-   **Greater efficiency in capital allocation** by approving only low-risk loans.
+-   **Decision transparency** thanks to the model's interpretability.
+
+**Business Trade-Off:**
+The perfect model implies that no good clients will be rejected, nor will bad loans be approved in the test data, representing an ideal scenario with no trade-offs in this specific dataset.
+
+**Next Steps:**
+-   **Validation on real-time data** to confirm model performance outside the test set.
+-   **Development of a scoring system** based on LDA coefficients for operational use.
+-   **Continuous monitoring** of the model to detect changes in credit risk patterns.
