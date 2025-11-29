@@ -1,8 +1,6 @@
-# MegaMart Customer Segmentation Analysis
+# Customer Satisfaction Case Study - TechnoServe Solutions
 
-**Authors:** 
-
-- Diego Colin Reyes
+**Authors:** - Diego Colin Reyes
 - Daniel Alejandro López Martínez
 - Eduardo Ramírez Almanza
 
@@ -10,83 +8,95 @@
 
 ## 1. Business Context
 **Client Description & Problem:**
-MegaMart is a retail platform currently facing challenges with a "one-size-fits-all" marketing approach. The company possesses a rich dataset of 3,000 customers containing behavioral metrics (spending, browsing, and returns) but lacks a structured way to categorize these customers. The primary problem is the inability to distinguish between high-value loyalists, churn-risk customers, and new potential shoppers, leading to inefficient marketing spend.
+**TechnoServe Solutions** es una empresa que busca la excelencia en el servicio, pero carece de un entendimiento claro y cuantitativo sobre qué factores específicos están impulsando o minando la **satisfacción del cliente** (*Customer Satisfaction*). La empresa necesita transformar más de **3,400 encuestas** en un conjunto de *drivers* de negocio accionables. El problema principal es la incapacidad de **priorizar** las inversiones estratégicas que tienen el mayor impacto en los resultados clave del negocio.
 
 **Strategic Importance:**
-This analysis transforms raw behavioral data into actionable customer segments. By understanding distinct customer profiles, MegaMart can:
-* Transition from generic mass marketing to personalized targeting.
-* Identify and retain the most profitable customers (VIPs).
-* Address specific pain points, such as high return rates in otherwise valuable segments.
-* Optimize resource allocation by focusing retention efforts on high-potential groups.
+Este estudio convierte datos de satisfacción en un **modelo de impacto predictivo**. Al comprender y priorizar los factores de satisfacción, TechnoServe Solutions puede:
+* Dejar de invertir en áreas de bajo impacto y **enfocar recursos** en los verdaderos *drivers* de la lealtad.
+* Predecir el comportamiento del cliente, como la **probabilidad de renovación** (`renewal_likelihood`) y el **Net Promoter Score (NPS)**.
+* Implementar acciones concretas (como la modernización de soporte y entrega de proyectos) que transformen la operación de **reactiva a proactiva**.
+* Impactar directamente en el **Valor de Vida del Cliente (CLV)**, la **tasa de abandono (*churn*)** y el **crecimiento de ingresos**.
 
 ---
 
 ## 2. Methodology
 **Multivariate Method Applied:**
-We utilized **Unsupervised Machine Learning**, specifically comparing **Hierarchical Clustering (Ward's Method)** and **K-Means Clustering**. Principal Component Analysis (PCA) was used for dimensionality reduction to visualize the final clusters.
+Se empleó una metodología de dos fases:
+1.  **Análisis Factorial Exploratorio (EFA)**: Utilizado para reducir las 23 variables de satisfacción en un número menor de **Factores Latentes** o constructos subyacentes.
+2.  **Modelado Predictivo (Random Forest / XGBoost)**: Utilizado para entrenar un modelo de regresión que predice las **variables de resultado** del negocio (NPS, Satisfacción General, etc.) utilizando los factores latentes como *features*.
 
 **Justification:**
-* **Standardization:** Applied `StandardScaler` to ensure variables with large ranges (e.g., `total_spend`) did not dominate variables with small ranges (e.g., `email_open_rate`).
-* **Model Selection:** K-Means was selected for the final model due to its efficiency and the distinct separation of groups.
-* **Validation:** The optimal number of clusters ($k=4$) was determined using a convergence of three methods:
-    1.  **Elbow Method:** Showed a clear inflection point at $k=4$.
-    2.  **Silhouette Score:** Analysis confirmed $k=4$ offered the most stable and interpretable structure (Score: ~0.32) without over-segmenting.
-    3.  **Dendrogram:** Visual inspection of the Ward linkage tree confirmed a significant cut point for 4 groups.
+* **Preparación de Datos**: Se aplicó la técnica de **imputación de valores faltantes KNNImputer** ($k=5$) para tratar los datos nulos, particularmente en variables como `trust_reliability` y `problem_solving`.
+* **Idoneidad para EFA**: La medida **KMO (Kaiser-Meyer-Olkin)** se calculó con un valor de **0.959**, lo que justificó de manera sólida el uso del Análisis Factorial para la reducción de dimensionalidad.
+* **Modelo Híbrido**: La combinación de EFA y modelado predictivo (Random Forest) permitió no solo identificar los *drivers* (EFA) sino también cuantificar su **importancia relativa** en el impacto sobre los resultados clave del negocio.
 
 **Tools & Libraries:**
-* **Python**: Core programming language.
-* **Pandas & NumPy**: Data manipulation and cleaning.
-* **Scikit-learn**: PCA, K-Means, Hierarchical Clustering, and validation metrics.
-* **Plotly & SciPy**: Interactive visualizations and dendrogram generation.
+* **Python**: Lenguaje de programación central.
+* **Pandas & NumPy**: Manipulación y limpieza de datos.
+* **Scikit-learn**: `StandardScaler`, `KNNImputer`, `RandomForestRegressor`.
+* **FactorAnalyzer**: Implementación de Análisis Factorial Exploratorio.
+* **XGBoost**: Librería para el modelado predictivo avanzado (importada en `main.ipynb`).
+* **Plotly**: Visualizaciones interactivas de resultados.
 
 ---
 
 ## 3. Data
 **Dataset Description:**
-The analysis is based on `retail_customer_data.csv`, containing **3,000** unique customer records with **10** columns. The dataset is complete with no missing values.
+El análisis se basó en un conjunto de datos que consolidó **más de 3,400 encuestas** provenientes de **850 clientes** únicos. El conjunto de datos inicial consta de **31 variables** y **3400 observaciones**.
 
 **Key Variables:**
-* **Monetary/Transaction:** `total_spend`, `monthly_transactions`, `avg_basket_size`.
-* **Engagement:** `avg_session_duration`, `product_views_per_visit`, `email_open_rate`.
-* **Retention/Loyalty:** `customer_tenure_months`, `recency_days`, `return_rate`.
+El conjunto de variables se dividió en dos grupos:
+
+* **Variables de Satisfacción (Inputs - 23 variables):**
+    * Agrupadas en 5 dimensiones iniciales: Excelencia Técnica, Gestión de Relaciones, **Entrega de Proyectos**, Valor y Costo, y **Soporte**.
+    * Ejemplos: `timeline_adherence`, `budget_control`, `trust_reliability`.
+* **Variables de Resultado (Outputs - 5 variables):**
+    * `overall_satisfaction` (Satisfacción general)
+    * `nps_score` (Puntuación NPS)
+    * `renewal_likelihood` (Probabilidad de renovación)
+    * `revenue_growth_pct` (Crecimiento porcentual de ingresos)
+    * `referrals_generated` (Referidos generados)
 
 **Data Dictionary:**
-* [Link to Data Dictionary / Raw File](#) *(Placeholder for repository link)*
+* [Link to Data Dictionary / Raw File](#) *(Placeholder para el enlace del repositorio)*
 
 ---
 
 ## 4. Key Findings
-The analysis identified **4 distinct customer profiles** ($k=4$):
+El análisis concluyó que la combinación de Factor Analysis y Random Forest es clave para la toma de decisiones, ya que permite priorizar los factores según su **impacto agregado** en las métricas de negocio.
 
-* **Cluster 0 - "The Elite" (17.5%):** High spenders, frequent shoppers, highly engaged digitally, and low return rates. They are the most profitable segment.
-* **Cluster 1 - "At-Risk / Disengaged" (31%):** Lowest spending, high recency (haven't shopped recently), and high return rates. They show signs of churning.
-* **Cluster 2 - "Efficient Big Spenders" (14.4%):** High total spend and basket size, but they shop quickly (low duration/views). **Critical Insight:** They have a high return rate, which eats into their profitability.
-* **Cluster 3 - "New Growth Potential" (37.1%):** Newer customers with frequent small transactions. They are active but have not yet developed high basket sizes.
+**Factores Críticos (Identificados por su mayor impacto):**
+Aunque el nombre exacto de los factores latentes se encuentra en el reporte completo (basado en los *loadings*), las áreas clave que dominan el impacto son:
+1.  **Modernización de la Entrega de Proyectos:** Factores relacionados con la ejecución, la gestión del cambio y el control de los entregables.
+2.  **Modernización del Soporte:** Factores relacionados con la eficiencia, la proactividad y la disponibilidad de soluciones.
 
-**Model Performance:**
-* **Silhouette Score:** 0.3173 (Indicates reasonable separation with some expected overlap in behavioral data).
+**Modelo de Desempeño:**
+El modelo predictivo basado en Random Forest se utilizó para cuantificar el impacto de los factores en las variables de resultado, mostrando la importancia relativa de cada uno de ellos para predecir **Satisfacción General, NPS y Renovación**.
 
 **Featured Visualization:**
-*(Cluster Profiles Heatmap: Z-Scores of behavioral variables by Cluster)*
-![Cluster Heatmap Placeholder](../case-03-cluster-analysis/visualizations/Clusters_centroids.png)
-*Note: See the full report for the interactive Plotly heatmap.*
+*(Gráfico de Barras de Impacto: Importancia Agregada de Cada Factor en los Resultados de Negocio)*
+![Placeholder for Factor Impact Chart](visualizations/Factor_Impact_Chart.png)
+*Nota: Este gráfico visualiza los factores de satisfacción ordenados por su influencia total en las métricas de negocio.*
 
 ---
 
 ## 5. Business Recommendations
 
-1.  **Launch a VIP Loyalty Program (Target: Cluster 0):**
-    * Since these are high-spend, low-return customers, focus on retention. Offer exclusive early access to products to maintain their high engagement.
-2.  **Investigate Return Logistics (Target: Cluster 2):**
-    * This group spends heavily but returns frequently. Implement a feedback loop to understand if products are defective or descriptions are misleading. A personalized "sizing guide" or "consultation" could reduce returns and double profitability.
-3.  **Nurture Campaign (Target: Cluster 3):**
-    * These are frequent but low-value shoppers. Use "bundle deals" or "threshold discounts" (e.g., "$10 off when you spend $100") to increase their Average Basket Size.
+Las iniciativas estratégicas se agrupan en dos pilares que buscan transformar la operación de **reactiva a proactiva**:
+
+1.  **Modernización de la Entrega de Proyectos:**
+    * **Implementar una PMO (Oficina de Gestión de Proyectos):** Para estandarizar procesos y asegurar la mejora en la **adherencia al *timeline*** (`timeline_adherence`) y el **control presupuestario** (`budget_control`).
+    * **Mejorar la Gestión del Cambio:** Implementar documentación estructurada y sesiones de *kick-off* con el cliente para minimizar las desviaciones y el retrabajo.
+
+2.  **Modernización del Soporte y Post-Venta:**
+    * **Fomentar la Proactividad y el Auto-servicio:** Ofrecer **capacitación proactiva** (rutas de aprendizaje, biblioteca bajo demanda) y bases de conocimiento con micro-tutoriales.
+    * **Estructurar la Atención Reactiva:** Implementar un sistema escalonado de tickets con **SLAs claros** (Acuerdos de Nivel de Servicio) para mejorar la **eficiencia operativa**.
 
 **Expected Impact:**
-* **Increase CLV:** By moving Cluster 3 into the spending habits of Cluster 0.
-* **Cost Reduction:** By lowering the return rate in Cluster 2.
-* **Churn Prevention:** By re-engaging Cluster 1 via win-back email campaigns.
+* **Aumento de Márgenes:** Reducción de costos por retrabajos y desviaciones en los proyectos.
+* **Disminución de *Churn* (Abandono):** Mayor retención de clientes por la mejora del soporte y la fiabilidad.
+* **Incremento de CLV:** Clientes más satisfechos se retienen por más tiempo e **incrementan su valor de vida**.
 
 **Next Steps:**
-* Deploy the K-Means model to the production pipeline to tag new customers daily.
-* A/B test the suggested "Bundle Deal" marketing campaign on Cluster 3.
+* **Diseño de la PMO:** Formalizar los *workflows* para los factores de Entrega de Proyectos de mayor impacto.
+* **Lanzamiento de la Plataforma de Auto-servicio:** Priorizar la creación de bases de conocimiento para las preguntas más frecuentes identificadas en el análisis de tickets de soporte.
